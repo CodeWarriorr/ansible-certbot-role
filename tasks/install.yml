@@ -1,0 +1,6 @@
+---
+- name: Certbot | install certbot package
+  become: true
+  package:
+    name: certbot
+    state: present

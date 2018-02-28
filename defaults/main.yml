@@ -1,0 +1,15 @@
+---
+cert_domains:
+  - mysystem.tld
+
+certbot_stop_services:
+  - nginx
+
+cert_email: admin@{{ cert_domains | first }}
+certbot_create_command: certbot certonly --standalone --rsa-key-size 4096 -n --agree-tos --email {{ cert_email }} -d {{ cert_domains | join(',') }}
+
+certbot_auto_renew: true
+#certbot_auto_renew_user: root
+certbot_auto_renew_hour: 3
+certbot_auto_renew_minute: 30
+certbot_auto_renew_options: "--quiet --no-self-upgrade"

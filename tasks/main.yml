@@ -1,0 +1,7 @@
+---
+
+- include: install.yml
+
+- include: cert-standalone.yml
+
+- include: renew-cron.yml

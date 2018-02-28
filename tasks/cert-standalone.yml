@@ -1,0 +1,30 @@
+---
+- name: Certbot | check if cert already exists
+  stat:
+    path: /etc/letsencrypt/live/{{ cert_domains | first }}/cert.pem
+  register: letsencrypt_cert
+
+- debug:
+    msg: "{{ letsencrypt_cert }}"
+
+- name: Certbot | stop services before cert generation
+  service:
+    name: "{{ item }}"
+    state: stopped
+  when: not letsencrypt_cert.stat.exists
+  with_items: "{{ certbot_stop_services }}"
+
+- debug:
+    msg: "{{ letsencrypt_cert.stat.exists }}"
+
+- name: Certbot | generate new certificates
+  shell: "{{ certbot_create_command }}"
+  when: not letsencrypt_cert.stat.exists
+
+
+- name: Certbot | start services after cert generation
+  service:
+    name: "{{ item }}"
+    state: started
+  when: not letsencrypt_cert.stat.exists
+  with_items: "{{ certbot_stop_services }}"
